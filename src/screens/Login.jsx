@@ -1,5 +1,7 @@
-const TEST_USERNAME = "testuser";
-const TEST_PASSWORD = "Test@123";
+const TEST_ACCOUNTS = [
+  { username: "testuser", password: "Test@123" },
+  { username: "test", password: "test" },
+];
 const TEST_OTP = "1234";
 
 function LoginScreen({ onNavigate, onLoginSuccess }) {
@@ -14,7 +16,10 @@ function LoginScreen({ onNavigate, onLoginSuccess }) {
       setError("Please enter your username and password.");
       return;
     }
-    if (username !== TEST_USERNAME || password !== TEST_PASSWORD) {
+    const isValid = TEST_ACCOUNTS.some(
+      (acc) => acc.username === username && acc.password === password
+    );
+    if (!isValid) {
       setError("Invalid username or password.");
       return;
     }
