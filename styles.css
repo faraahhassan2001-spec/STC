@@ -21,7 +21,6 @@
   --lock-icon-bg: #f4f2fa;
   --footer-gray: #b5b0c2;
   --footer-blue: #4a6cf7;
-  --success-bg: #3e5c76;
   --success-circle-outer: #e6daf0;
   --success-circle-inner: #5b2a86;
   --error-red: #e8324d;
@@ -46,10 +45,6 @@ html, body {
   background: var(--bg-lavender);
   display: flex;
   flex-direction: column;
-}
-
-.device.dark-bg {
-  background: var(--success-bg);
 }
 
 .device.home-bg {
@@ -317,21 +312,35 @@ html, body {
   margin: -8px 0 16px;
 }
 
-/* success screen */
-.success-wrap {
-  flex: 1;
+/* success overlay (modal on top of Reset Password) */
+.success-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(16, 18, 28, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 32px;
+  z-index: 50;
+  animation: successFadeIn 0.2s ease;
+}
+@keyframes successFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 .success-card {
   width: 100%;
+  max-width: 320px;
   background: #fff;
   border-radius: 18px;
   padding: 36px 24px 32px;
   text-align: center;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  animation: successPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes successPop {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 .success-title {
   font-size: 19px;

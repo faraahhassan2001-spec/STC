@@ -1,21 +1,19 @@
-function SuccessScreen({ onNavigate }) {
+function SuccessOverlay({ onDone }) {
   React.useEffect(() => {
-    const t = setTimeout(() => onNavigate("login"), 2500);
+    const t = setTimeout(onDone, 2800);
     return () => clearTimeout(t);
-  }, [onNavigate]);
+  }, [onDone]);
 
   return (
-    <div className="screen-body">
-      <div className="success-wrap">
-        <div className="success-card">
-          <div className="success-title">Success</div>
-          <div className="success-circle-outer">
-            <div className="success-circle-inner">
-              <CheckmarkIcon />
-            </div>
+    <div className="success-overlay">
+      <div className="success-card">
+        <div className="success-title">Success</div>
+        <div className="success-circle-outer">
+          <div className="success-circle-inner">
+            <CheckmarkIcon />
           </div>
-          <div className="success-text">Your password has been reset successfully.</div>
         </div>
+        <div className="success-text">Your password has been reset successfully.</div>
       </div>
     </div>
   );

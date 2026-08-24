@@ -1,4 +1,4 @@
-function ResetPasswordScreen({ onNavigate }) {
+function ResetPasswordScreen({ onShowSuccess }) {
   const [pw, setPw] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -19,7 +19,7 @@ function ResetPasswordScreen({ onNavigate }) {
       return;
     }
     setError("");
-    onNavigate("success");
+    onShowSuccess();
   }
 
   return (
