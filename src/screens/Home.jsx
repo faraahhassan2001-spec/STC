@@ -1,20 +1,112 @@
+function handleImgFallback(e, fallbackSrc) {
+  if (!fallbackSrc || e.target.dataset.fellBack) return;
+  e.target.dataset.fellBack = "1";
+  e.target.src = fallbackSrc;
+}
+
 function Avatar() {
   return (
-    <svg className="avatar" viewBox="0 0 46 46" xmlns="http://www.w3.org/2000/svg">
-      <rect width="46" height="46" fill="#d7d2e8" />
-      <circle cx="23" cy="18" r="8" fill="#b6aed4" />
-      <ellipse cx="23" cy="42" rx="15" ry="14" fill="#b6aed4" />
-    </svg>
+    <img
+      className="avatar"
+      src="https://randomuser.me/api/portraits/men/32.jpg"
+      alt="Profile photo"
+      onError={(e) => handleImgFallback(e, "https://i.pravatar.cc/150?img=12")}
+    />
   );
 }
 
-function PromoPersonSvg() {
+const BANNER_PERSON_PHOTO = "./assets/banner-person.jpg?v=2";
+
+const PROMO_SLIDES = [
+  {
+    key: "potential",
+    modifier: "purple",
+    heading: "Unlock your Potential",
+    body: "Drive Sales, Expand Reach, Achieve Sucess",
+    photo: BANNER_PERSON_PHOTO,
+  },
+  {
+    key: "smart-sales",
+    modifier: "red",
+    heading: "Smart Sales, Made Simple",
+    body: "Boost transactions, manage e-vouchers, and grow your revenue effortlessly.",
+    photo: BANNER_PERSON_PHOTO,
+  },
+  {
+    key: "empowerment",
+    modifier: "teal",
+    heading: "Professional Empowerment",
+    body: "Stay connected, manage operations, and deliver excellence every day.",
+    photo: BANNER_PERSON_PHOTO,
+  },
+];
+
+const PROMO_AUTOPLAY_MS = 4000;
+const PROMO_SWIPE_THRESHOLD = 40;
+
+function PromoCarousel() {
+  const [index, setIndex] = useState(0);
+  const timerRef = React.useRef(null);
+  const dragRef = React.useRef(null);
+
+  function restartAutoplay() {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setIndex((i) => (i + 1) % PROMO_SLIDES.length);
+    }, PROMO_AUTOPLAY_MS);
+  }
+
+  React.useEffect(() => {
+    restartAutoplay();
+    return () => clearInterval(timerRef.current);
+  }, []);
+
+  function goTo(nextIndex) {
+    setIndex(((nextIndex % PROMO_SLIDES.length) + PROMO_SLIDES.length) % PROMO_SLIDES.length);
+    restartAutoplay();
+  }
+
+  function handlePointerDown(e) {
+    dragRef.current = { startX: e.clientX, dragging: true };
+  }
+  function handlePointerUp(e) {
+    if (!dragRef.current?.dragging) return;
+    const deltaX = e.clientX - dragRef.current.startX;
+    dragRef.current.dragging = false;
+    if (deltaX > PROMO_SWIPE_THRESHOLD) goTo(index - 1);
+    else if (deltaX < -PROMO_SWIPE_THRESHOLD) goTo(index + 1);
+  }
+
   return (
-    <svg className="promo-photo" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="95" cy="150" rx="55" ry="70" fill="rgba(255,255,255,0.08)" />
-      <circle cx="100" cy="55" r="26" fill="rgba(255,255,255,0.16)" />
-      <rect x="65" y="80" width="70" height="90" rx="30" fill="rgba(255,255,255,0.12)" />
-    </svg>
+    <div>
+      <div
+        className="promo-carousel"
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+      >
+        <div className="promo-track" style={{ transform: `translateX(-${index * 100}%)` }}>
+          {PROMO_SLIDES.map((slide) => (
+            <div key={slide.key} className={"promo-banner promo-banner--" + slide.modifier}>
+              <h3>{slide.heading}</h3>
+              <p>{slide.body}</p>
+              <img className="promo-photo" src={slide.photo} alt="" />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="promo-dots">
+        {PROMO_SLIDES.map((slide, i) => (
+          <button
+            key={slide.key}
+            type="button"
+            aria-label={"Go to slide " + (i + 1)}
+            className={i === index ? "active" : ""}
+            onClick={() => goTo(i)}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -66,9 +158,8 @@ function MenuItem({ item, colorClass }) {
   );
 }
 
-function HomeScreen() {
+function HomeScreen({ kmidVerified, onOpenKmidSheet }) {
   const [activeNav, setActiveNav] = useState("home");
-  const [promoIndex] = useState(0);
 
   return (
     <div className="home-root">
@@ -86,28 +177,21 @@ function HomeScreen() {
           </button>
         </div>
 
-        <div className="alert-card">
-          <div className="alert-top">
-            <div className="alert-shield"><ShieldIcon /></div>
-            <div className="alert-title">Action Required</div>
-            <div className="alert-days">2 days left</div>
+        {!kmidVerified && (
+          <div className="alert-card">
+            <div className="alert-top">
+              <div className="alert-shield"><ShieldIcon /></div>
+              <div className="alert-title">Action Required</div>
+              <div className="alert-days">2 days left</div>
+            </div>
+            <div className="alert-desc">Verify KMID to maintain access.</div>
+            <button className="alert-btn" onClick={onOpenKmidSheet}>
+              Verify KMID <ArrowRightIcon />
+            </button>
           </div>
-          <div className="alert-desc">Verify KMID to maintain access.</div>
-          <button className="alert-btn">
-            Verify KMID <ArrowRightIcon />
-          </button>
-        </div>
+        )}
 
-        <div className="promo-banner">
-          <h3>Unlock your Potential</h3>
-          <p>Drive Sales, Expand Reach, Achieve Sucess</p>
-          <PromoPersonSvg />
-        </div>
-        <div className="promo-dots">
-          {[0, 1, 2].map((i) => (
-            <span key={i} className={i === promoIndex ? "active" : ""} />
-          ))}
-        </div>
+        <PromoCarousel />
 
         <div className="section-card">
           <div className="section-head">
