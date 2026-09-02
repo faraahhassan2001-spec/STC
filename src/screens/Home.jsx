@@ -158,8 +158,250 @@ function MenuItem({ item, colorClass }) {
   );
 }
 
+const SERVICES_SECTIONS = [
+  {
+    title: "Order Menu",
+    items: [
+      { key: "prepaid", label: "Prepaid" },
+      { key: "mnp", label: "MNP" },
+      { key: "bundle", label: "Bundle Activation / Renwal" },
+      { key: "linevalidity", label: "Line Validity" },
+      { key: "quickpay", label: "Quick Pay" },
+      { key: "customerrecharge", label: "Customer Recharge" },
+      { key: "ordershistory", label: "Orders History" },
+      { key: "checkavailability", label: "Check Availability" },
+      { key: "idupdate", label: "ID Update" },
+      { key: "updateinfo", label: "info Update" },
+      { key: "pre2post", label: "Pre2Post" },
+    ],
+  },
+  {
+    title: "E-Wallet",
+    items: [
+      { key: "wallettopup", label: "Wallet Top-up" },
+      { key: "credittransfer", label: "Credit Transfer" },
+      { key: "transactionhistory", label: "Transaction History" },
+      { key: "analytics", label: "Analytics" },
+    ],
+  },
+  {
+    title: "Stock Management",
+    items: [
+      { key: "inventorydashboard", label: "Inventory Dashboard" },
+      { key: "salesorder", label: "Sales Order" },
+      { key: "purchaseorder", label: "Purchase Orders" },
+      { key: "stockreturn", label: "Stock Return" },
+      { key: "myhierarchy", label: "My Hierarchy" },
+    ],
+  },
+  {
+    title: "Channel Member Onboarding",
+    items: [{ key: "channelonboarding", label: "Channel Onboarding" }],
+  },
+  {
+    title: "Brodcast",
+    items: [
+      { key: "sendbroadcast", label: "Send Broadcast" },
+      { key: "received", label: "Received" },
+      { key: "sent", label: "Sent" },
+    ],
+  },
+];
+
+function ServiceRow({ item }) {
+  return (
+    <button type="button" className="service-row" onClick={() => {}}>
+      <span className="row-icon"><HomeIcon name={item.key} size={19} /></span>
+      <span className="row-label">{item.label}</span>
+      <span className="row-chevron"><ChevronRightIcon /></span>
+    </button>
+  );
+}
+
+function ServicesView({ onBack }) {
+  return (
+    <div>
+      <div className="services-header">
+        <button className="header-icon-btn" onClick={onBack} aria-label="Back">
+          <BackArrowIcon />
+        </button>
+        <div className="title">Services</div>
+        <button className="header-icon-btn"><NavAppsIcon /></button>
+        <button className="header-icon-btn">
+          <BellIcon />
+          <span className="dot" />
+        </button>
+      </div>
+
+      {SERVICES_SECTIONS.map((section) => (
+        <div className="section-card" key={section.title}>
+          <div className="section-head">
+            <h4>{section.title}</h4>
+          </div>
+          <div className="service-list">
+            {section.items.map((item) => (
+              <ServiceRow key={item.key} item={item} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SettingsChevronBtn() {
+  return (
+    <span className="settings-chevron-btn">
+      <ChevronRightIcon />
+    </span>
+  );
+}
+
+function ToggleSwitch({ on, onToggle }) {
+  return (
+    <button
+      type="button"
+      className={"toggle-switch" + (on ? " on" : "")}
+      onClick={onToggle}
+      role="switch"
+      aria-checked={on}
+    >
+      <span className="toggle-thumb" />
+    </button>
+  );
+}
+
+function SettingsView({ onBack, faceIdOn, onToggleFaceId, biometricOn, onToggleBiometric, language, onOpenPinSheet, onOpenLanguageSheet, onOpenWidgetsSheet }) {
+  return (
+    <div>
+      <div className="services-header">
+        <button className="header-icon-btn" onClick={onBack} aria-label="Back">
+          <BackArrowIcon />
+        </button>
+        <div className="title">Setting</div>
+        <button className="header-icon-btn">
+          <BellIcon />
+          <span className="dot" />
+        </button>
+      </div>
+
+      <button type="button" className="settings-item-card" onClick={onOpenWidgetsSheet}>
+        <span className="label">Widgets</span>
+        <SettingsChevronBtn />
+      </button>
+
+      <button type="button" className="settings-item-card" onClick={onOpenPinSheet}>
+        <span className="label">Change PIN code</span>
+        <SettingsChevronBtn />
+      </button>
+
+      <button type="button" className="settings-item-card" onClick={onOpenLanguageSheet}>
+        <span className="label">Language</span>
+        <span className="settings-right-group">
+          <span className="settings-value">{language}</span>
+          <SettingsChevronBtn />
+        </span>
+      </button>
+
+      <div className="settings-item-card">
+        <span className="label">Allow face ID</span>
+        <ToggleSwitch on={faceIdOn} onToggle={onToggleFaceId} />
+      </div>
+
+      <div className="settings-item-card">
+        <span className="label">Biometric</span>
+        <ToggleSwitch on={biometricOn} onToggle={onToggleBiometric} />
+      </div>
+
+      <div className="settings-info-card">
+        <div className="settings-info-row">
+          <span className="label">Version number</span>
+          <span className="value">4.1.5</span>
+        </div>
+        <div className="settings-info-row">
+          <span className="label">Build number</span>
+          <span className="value">20180549_R2.03</span>
+        </div>
+      </div>
+
+      <div className="footer-note">
+        Powered By <b>Leading</b> <span style={{ opacity: 0.6 }}>⚙</span>
+      </div>
+    </div>
+  );
+}
+
+function BottomNav({ activeNav, setActiveNav }) {
+  return (
+    <div className="bottom-nav">
+      <button className={"nav-btn" + (activeNav === "home" ? " active" : "")} onClick={() => setActiveNav("home")}>
+        <NavHomeIcon />
+      </button>
+      <button className={"nav-btn" + (activeNav === "apps" ? " active" : "")} onClick={() => setActiveNav("apps")}>
+        <NavAppsIcon />
+      </button>
+      <button className={"nav-btn" + (activeNav === "settings" ? " active" : "")} onClick={() => setActiveNav("settings")}>
+        <NavGearIcon />
+      </button>
+      <button className={"nav-btn" + (activeNav === "profile" ? " active" : "")} onClick={() => setActiveNav("profile")}>
+        <NavUserIcon />
+      </button>
+    </div>
+  );
+}
+
 function HomeScreen({ kmidVerified, onOpenKmidSheet }) {
   const [activeNav, setActiveNav] = useState("home");
+  const [faceIdOn, setFaceIdOn] = useState(true);
+  const [biometricOn, setBiometricOn] = useState(true);
+  const [language, setLanguage] = useState("EN");
+  const [showPinSheet, setShowPinSheet] = useState(false);
+  const [showLanguageSheet, setShowLanguageSheet] = useState(false);
+  const [showWidgetsSheet, setShowWidgetsSheet] = useState(false);
+
+  if (activeNav === "apps") {
+    return (
+      <div className="home-root">
+        <div className="home-scroll">
+          <ServicesView onBack={() => setActiveNav("home")} />
+        </div>
+        <BottomNav activeNav={activeNav} setActiveNav={setActiveNav} />
+      </div>
+    );
+  }
+
+  if (activeNav === "settings") {
+    return (
+      <div className="home-root">
+        <div className="home-scroll">
+          <SettingsView
+            onBack={() => setActiveNav("home")}
+            faceIdOn={faceIdOn}
+            onToggleFaceId={() => setFaceIdOn((v) => !v)}
+            biometricOn={biometricOn}
+            onToggleBiometric={() => setBiometricOn((v) => !v)}
+            language={language}
+            onOpenPinSheet={() => setShowPinSheet(true)}
+            onOpenLanguageSheet={() => setShowLanguageSheet(true)}
+            onOpenWidgetsSheet={() => setShowWidgetsSheet(true)}
+          />
+        </div>
+        <BottomNav activeNav={activeNav} setActiveNav={setActiveNav} />
+        {showPinSheet && <ChangePinSheet onClose={() => setShowPinSheet(false)} />}
+        {showLanguageSheet && (
+          <LanguageSheet
+            selected={language}
+            onSelect={(code) => {
+              setLanguage(code);
+              setShowLanguageSheet(false);
+            }}
+            onClose={() => setShowLanguageSheet(false)}
+          />
+        )}
+        {showWidgetsSheet && <WidgetsSheet onClose={() => setShowWidgetsSheet(false)} />}
+      </div>
+    );
+  }
 
   return (
     <div className="home-root">
@@ -281,20 +523,7 @@ function HomeScreen({ kmidVerified, onOpenKmidSheet }) {
         </div>
       </div>
 
-      <div className="bottom-nav">
-        <button className={"nav-btn" + (activeNav === "home" ? " active" : "")} onClick={() => setActiveNav("home")}>
-          <NavHomeIcon />
-        </button>
-        <button className={"nav-btn" + (activeNav === "apps" ? " active" : "")} onClick={() => setActiveNav("apps")}>
-          <NavAppsIcon />
-        </button>
-        <button className={"nav-btn" + (activeNav === "settings" ? " active" : "")} onClick={() => setActiveNav("settings")}>
-          <NavGearIcon />
-        </button>
-        <button className={"nav-btn" + (activeNav === "profile" ? " active" : "")} onClick={() => setActiveNav("profile")}>
-          <NavUserIcon />
-        </button>
-      </div>
+      <BottomNav activeNav={activeNav} setActiveNav={setActiveNav} />
     </div>
   );
 }
