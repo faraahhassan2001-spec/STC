@@ -15,6 +15,49 @@ function Avatar() {
   );
 }
 
+function QrFinderPattern({ x, y }) {
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect width="18" height="18" fill="#221d33" />
+      <rect x="3" y="3" width="12" height="12" fill="#fff" />
+      <rect x="6" y="6" width="6" height="6" fill="#221d33" />
+    </g>
+  );
+}
+
+const QR_NOISE_MODULES = [
+  22, 0, 26, 0, 30, 0, 38, 0, 46, 0, 50, 0, 58, 0, 66, 0, 74, 0,
+  0, 22, 0, 30, 0, 38, 0, 50, 0, 58, 0, 66, 0, 74, 0, 78,
+  22, 22, 26, 22, 34, 22, 42, 26, 50, 22, 58, 26, 66, 22,
+  22, 30, 30, 34, 38, 30, 46, 34, 54, 30, 62, 34, 70, 30,
+  22, 42, 26, 46, 34, 42, 42, 46, 50, 42, 58, 46, 66, 42, 74, 46,
+  22, 58, 30, 62, 38, 58, 46, 62, 54, 58, 62, 62, 70, 58,
+  22, 66, 26, 70, 34, 66, 42, 70, 50, 66, 58, 70, 66, 66, 74, 70,
+  0, 46, 0, 54, 0, 62, 0, 70, 6, 50, 10, 62,
+  46, 0, 54, 0, 62, 0, 70, 0, 50, 6, 62, 10,
+  78, 22, 78, 30, 78, 42, 78, 50, 78, 58, 78, 66, 70, 78, 62, 78, 50, 78, 38, 78,
+];
+
+function QrCodeDecor() {
+  const modules = [];
+  for (let i = 0; i < QR_NOISE_MODULES.length; i += 2) {
+    modules.push([QR_NOISE_MODULES[i], QR_NOISE_MODULES[i + 1]]);
+  }
+  return (
+    <svg viewBox="0 0 96 96" className="qr-code-svg">
+      <rect width="96" height="96" fill="#fff" />
+      {modules.map(([mx, my], i) => (
+        <rect key={i} x={mx} y={my} width="4" height="4" fill="#221d33" />
+      ))}
+      <QrFinderPattern x={0} y={0} />
+      <QrFinderPattern x={78} y={0} />
+      <QrFinderPattern x={0} y={78} />
+      <circle cx="48" cy="48" r="15" fill="#fff" />
+      <text x="48" y="52" textAnchor="middle" fontSize="11" fontWeight="800" fontStyle="italic" fill="#4b2680">stc</text>
+    </svg>
+  );
+}
+
 const BANNER_PERSON_PHOTO = "./assets/banner-person.jpg?v=2";
 
 const PROMO_SLIDES = [
@@ -331,6 +374,70 @@ function SettingsView({ onBack, faceIdOn, onToggleFaceId, biometricOn, onToggleB
   );
 }
 
+const PROFILE_MENU = [
+  { key: "personal", label: "Personal Details" },
+  { key: "shopaddress", label: "Shop Address" },
+  { key: "devices", label: "Devices Logged" },
+  { key: "signature", label: "Signature" },
+];
+
+function ProfileView({ onBack, onOpenSheet }) {
+  return (
+    <div>
+      <div className="services-header">
+        <button className="header-icon-btn" onClick={onBack} aria-label="Back">
+          <BackArrowIcon />
+        </button>
+        <div className="title">Profile</div>
+        <button className="header-icon-btn profile-logout-btn" aria-label="Log out">
+          <LogoutIcon />
+        </button>
+        <button className="header-icon-btn">
+          <BellIcon />
+          <span className="dot" />
+        </button>
+      </div>
+
+      <div className="profile-id-card">
+        <div className="profile-id-top">
+          <div className="profile-id-avatar"><ProfilePersonIcon /></div>
+          <div className="profile-id-logo">stc</div>
+        </div>
+        <div className="profile-id-name">Employee name</div>
+        <div className="profile-id-role">Job title - Department</div>
+      </div>
+
+      {PROFILE_MENU.map((item) => (
+        <button
+          key={item.key}
+          type="button"
+          className="settings-item-card"
+          onClick={() => onOpenSheet(item.key)}
+        >
+          <span className="label">{item.label}</span>
+          <SettingsChevronBtn />
+        </button>
+      ))}
+
+      <div className="qr-card">
+        <div className="qr-title">Scan QR Code</div>
+        <div className="qr-subtitle">Place QR code inside the frame to scan</div>
+        <div className="qr-frame">
+          <span className="qr-corner qr-corner-tl" />
+          <span className="qr-corner qr-corner-tr" />
+          <span className="qr-corner qr-corner-bl" />
+          <span className="qr-corner qr-corner-br" />
+          <QrCodeDecor />
+        </div>
+      </div>
+
+      <div className="footer-note">
+        Powered By <b>Leading</b> <span style={{ opacity: 0.6 }}>⚙</span>
+      </div>
+    </div>
+  );
+}
+
 function BottomNav({ activeNav, setActiveNav }) {
   return (
     <div className="bottom-nav">
@@ -358,6 +465,7 @@ function HomeScreen({ kmidVerified, onOpenKmidSheet }) {
   const [showPinSheet, setShowPinSheet] = useState(false);
   const [showLanguageSheet, setShowLanguageSheet] = useState(false);
   const [showWidgetsSheet, setShowWidgetsSheet] = useState(false);
+  const [activeProfileSheet, setActiveProfileSheet] = useState(null);
 
   if (activeNav === "apps") {
     return (
@@ -399,6 +507,29 @@ function HomeScreen({ kmidVerified, onOpenKmidSheet }) {
           />
         )}
         {showWidgetsSheet && <WidgetsSheet onClose={() => setShowWidgetsSheet(false)} />}
+      </div>
+    );
+  }
+
+  if (activeNav === "profile") {
+    return (
+      <div className="home-root">
+        <div className="home-scroll">
+          <ProfileView onBack={() => setActiveNav("home")} onOpenSheet={setActiveProfileSheet} />
+        </div>
+        <BottomNav activeNav={activeNav} setActiveNav={setActiveNav} />
+        {activeProfileSheet === "personal" && (
+          <PersonalDetailsSheet onClose={() => setActiveProfileSheet(null)} />
+        )}
+        {activeProfileSheet === "shopaddress" && (
+          <ShopAddressSheet onClose={() => setActiveProfileSheet(null)} />
+        )}
+        {activeProfileSheet === "devices" && (
+          <DevicesLoggedSheet onClose={() => setActiveProfileSheet(null)} />
+        )}
+        {activeProfileSheet === "signature" && (
+          <SignatureSheet onClose={() => setActiveProfileSheet(null)} />
+        )}
       </div>
     );
   }
