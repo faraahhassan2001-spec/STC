@@ -139,8 +139,8 @@ function DevicesLoggedSheet({ onClose }) {
 function SignatureSheet({ onClose }) {
   const canvasRef = React.useRef(null);
   const drawingRef = React.useRef(false);
-  const hasStrokeRef = React.useRef(false);
   const lastPointRef = React.useRef(null);
+  const [hasSignature, setHasSignature] = useState(false);
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
@@ -163,7 +163,7 @@ function SignatureSheet({ onClose }) {
 
   function handlePointerDown(e) {
     drawingRef.current = true;
-    hasStrokeRef.current = true;
+    setHasSignature(true);
     lastPointRef.current = getPoint(e);
   }
   function handlePointerMove(e) {
@@ -184,7 +184,7 @@ function SignatureSheet({ onClose }) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    hasStrokeRef.current = false;
+    setHasSignature(false);
   }
 
   return (
@@ -205,8 +205,16 @@ function SignatureSheet({ onClose }) {
           />
         </div>
 
-        <button className="btn-primary" style={{ marginTop: 16 }} onClick={onClose}>
+        <button
+          className={"btn-primary" + (hasSignature ? "" : " btn-primary--disabled")}
+          style={{ marginTop: 16 }}
+          disabled={!hasSignature}
+          onClick={onClose}
+        >
           Save
+        </button>
+        <button type="button" className="kmid-cancel" onClick={onClose}>
+          Cancel
         </button>
       </div>
     </div>

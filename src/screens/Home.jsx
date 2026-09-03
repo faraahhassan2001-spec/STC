@@ -187,9 +187,9 @@ const BROADCAST_MENU = [
   { key: "sent", label: "Sent", badge: 99 },
 ];
 
-function MenuItem({ item, colorClass }) {
+function MenuItem({ item, colorClass, onClick }) {
   return (
-    <button className="menu-item" onClick={() => {}}>
+    <button className="menu-item" onClick={onClick || (() => {})}>
       <div className="menu-icon-circle-wrap">
         <div className={"menu-icon-circle " + colorClass}>
           <HomeIcon name={item.key} size={22} />
@@ -467,6 +467,26 @@ function HomeScreen({ kmidVerified, onOpenKmidSheet }) {
   const [showWidgetsSheet, setShowWidgetsSheet] = useState(false);
   const [activeProfileSheet, setActiveProfileSheet] = useState(null);
 
+  if (activeNav === "prepaid") {
+    return (
+      <div className="home-root">
+        <div className="home-scroll">
+          <PrepaidActivationScreen onBack={() => setActiveNav("home")} />
+        </div>
+      </div>
+    );
+  }
+
+  if (activeNav === "notifications") {
+    return (
+      <div className="home-root">
+        <div className="home-scroll">
+          <NotificationsScreen onBack={() => setActiveNav("home")} />
+        </div>
+      </div>
+    );
+  }
+
   if (activeNav === "apps") {
     return (
       <div className="home-root">
@@ -544,7 +564,7 @@ function HomeScreen({ kmidVerified, onOpenKmidSheet }) {
             <div className="id">123456789</div>
           </div>
           <button className="header-icon-btn"><NavAppsIcon /></button>
-          <button className="header-icon-btn">
+          <button className="header-icon-btn" onClick={() => setActiveNav("notifications")}>
             <BellIcon />
             <span className="dot" />
           </button>
@@ -573,7 +593,12 @@ function HomeScreen({ kmidVerified, onOpenKmidSheet }) {
           </div>
           <div className="grid-menu">
             {ORDER_MENU.map((item) => (
-              <MenuItem key={item.key} item={item} colorClass="purple" />
+              <MenuItem
+                key={item.key}
+                item={item}
+                colorClass="purple"
+                onClick={item.key === "prepaid" ? () => setActiveNav("prepaid") : undefined}
+              />
             ))}
           </div>
         </div>
