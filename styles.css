@@ -1666,6 +1666,7 @@ html, body {
 }
 .prepaid-select:invalid { color: var(--input-placeholder); }
 .upload-box {
+  background: #fff;
   border: 1.5px dashed #c7bfe0;
   border-radius: 12px;
   padding: 26px 14px;
