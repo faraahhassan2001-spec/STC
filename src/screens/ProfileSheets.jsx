@@ -136,7 +136,7 @@ function DevicesLoggedSheet({ onClose }) {
   );
 }
 
-function SignatureSheet({ onClose }) {
+function SignatureSheet({ onClose, onSave }) {
   const canvasRef = React.useRef(null);
   const drawingRef = React.useRef(false);
   const lastPointRef = React.useRef(null);
@@ -209,7 +209,10 @@ function SignatureSheet({ onClose }) {
           className={"btn-primary" + (hasSignature ? "" : " btn-primary--disabled")}
           style={{ marginTop: 16 }}
           disabled={!hasSignature}
-          onClick={onClose}
+          onClick={() => {
+            if (onSave) onSave();
+            onClose();
+          }}
         >
           Save
         </button>

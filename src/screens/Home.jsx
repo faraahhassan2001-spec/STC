@@ -467,6 +467,36 @@ function HomeScreen({ kmidVerified, onOpenKmidSheet }) {
   const [showWidgetsSheet, setShowWidgetsSheet] = useState(false);
   const [activeProfileSheet, setActiveProfileSheet] = useState(null);
 
+  if (activeNav === "saleskpis") {
+    return (
+      <div className="home-root">
+        <div className="home-scroll">
+          <SalesKpisScreen onBack={() => setActiveNav("home")} />
+        </div>
+      </div>
+    );
+  }
+
+  if (activeNav === "comparisonkpis") {
+    return (
+      <div className="home-root">
+        <div className="home-scroll">
+          <ComparisonKpisScreen onBack={() => setActiveNav("home")} />
+        </div>
+      </div>
+    );
+  }
+
+  if (activeNav === "performance") {
+    return (
+      <div className="home-root">
+        <div className="home-scroll">
+          <PerformanceGlanceScreen onBack={() => setActiveNav("home")} />
+        </div>
+      </div>
+    );
+  }
+
   if (activeNav === "prepaid") {
     return (
       <div className="home-root">
@@ -585,6 +615,12 @@ function HomeScreen({ kmidVerified, onOpenKmidSheet }) {
         )}
 
         <PromoCarousel />
+
+        <KpisWidget
+          onOpenSalesKpis={() => setActiveNav("saleskpis")}
+          onOpenComparisonKpis={() => setActiveNav("comparisonkpis")}
+          onOpenPerformance={() => setActiveNav("performance")}
+        />
 
         <div className="section-card">
           <div className="section-head">
