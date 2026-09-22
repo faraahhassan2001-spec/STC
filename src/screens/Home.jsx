@@ -497,6 +497,16 @@ function HomeScreen({ kmidVerified, onOpenKmidSheet }) {
     );
   }
 
+  if (activeNav === "bundle") {
+    return (
+      <div className="home-root">
+        <div className="home-scroll">
+          <BundleActivationScreen onBack={() => setActiveNav("home")} />
+        </div>
+      </div>
+    );
+  }
+
   if (activeNav === "prepaid") {
     return (
       <div className="home-root">
@@ -633,7 +643,13 @@ function HomeScreen({ kmidVerified, onOpenKmidSheet }) {
                 key={item.key}
                 item={item}
                 colorClass="purple"
-                onClick={item.key === "prepaid" ? () => setActiveNav("prepaid") : undefined}
+                onClick={
+                  item.key === "prepaid"
+                    ? () => setActiveNav("prepaid")
+                    : item.key === "bundle"
+                    ? () => setActiveNav("bundle")
+                    : undefined
+                }
               />
             ))}
           </div>

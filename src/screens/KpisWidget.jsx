@@ -194,9 +194,33 @@ const KPI_ROWS = [
   { key: "performance", label: "performance at glance", icon: <PerformanceIcon /> },
 ];
 
+function KpiTabs({ items, activeKey, onSelect }) {
+  if (items.length < 2) {
+    return <div className="kpi-tabs-label">{items[0] ? items[0].label : ""}</div>;
+  }
+  return (
+    <div className="kpi-tabs">
+      {items.map((item) => (
+        <button
+          key={item.key}
+          type="button"
+          className={"kpi-tab" + (activeKey === item.key ? " active" : "")}
+          onClick={() => onSelect(item.key)}
+        >
+          {item.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function KpisWidget({ onOpenSalesKpis, onOpenComparisonKpis, onOpenPerformance }) {
   const [activeTab, setActiveTab] = useState("Acquisition");
   const data = KPI_CHART_DATA[activeTab];
+  // TEMP DEV TEST AID — remove this state + the button below once the KpiTabs
+  // single-category fallback has been visually confirmed. Not part of the design.
+  const [devSingleTab, setDevSingleTab] = useState(false);
+  const devKpiTabs = devSingleTab ? [KPI_TABS[0]] : KPI_TABS;
 
   return (
     <div className="section-card">
@@ -205,18 +229,16 @@ function KpisWidget({ onOpenSalesKpis, onOpenComparisonKpis, onOpenPerformance }
         <span className="more kpi-more"><MoreDotsIcon /></span>
       </div>
 
-      <div className="kpi-tabs">
-        {KPI_TABS.map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            className={"kpi-tab" + (activeTab === tab ? " active" : "")}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+      {/* TEMP DEV TEST AID — delete this button, it is not part of the design */}
+      <button type="button" className="dev-test-btn" onClick={() => setDevSingleTab((v) => !v)}>
+        Test: {devSingleTab ? "Back to multi tab" : "1 tab"}
+      </button>
+
+      <KpiTabs
+        items={devKpiTabs.map((tab) => ({ key: tab, label: tab }))}
+        activeKey={activeTab}
+        onSelect={setActiveTab}
+      />
 
       <div className="kpi-chart-card">
         <div className="kpi-chart-header">{data.title}</div>
@@ -411,18 +433,11 @@ function ComparisonKpisScreen({ onBack }) {
         </div>
         <div className="prepaid-subtitle">Select a comparison type to view KPI performance</div>
 
-        <div className="kpi-tabs">
-          {COMPARISON_OPTIONS.map((opt) => (
-            <button
-              key={opt.key}
-              type="button"
-              className={"kpi-tab" + (selected === opt.key ? " active" : "")}
-              onClick={() => setSelected(opt.key)}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
+        <KpiTabs
+          items={COMPARISON_OPTIONS.map((opt) => ({ key: opt.key, label: opt.label }))}
+          activeKey={selected}
+          onSelect={setSelected}
+        />
 
         <div className="kpi-chart-card">
           {!selected && <ComparisonEmptyState noData={false} />}

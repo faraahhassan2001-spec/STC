@@ -1731,6 +1731,12 @@ html, body {
   background: linear-gradient(135deg, #3a1c63, #5b2a86);
   color: #fff;
 }
+.kpi-tabs-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 14px;
+}
 .kpi-chart-card {
   background: #fbfbfd;
   border: 1px solid #f0eef6;
@@ -2535,3 +2541,53 @@ html, body {
 .white-plan-tabs .saleskpi-tab { position: relative; }
 .plan-tab-badge { position: absolute; top: -7px; right: -4px; background: #e5395a; color: #fff; font-size: 8.5px; font-weight: 700; border-radius: 6px; padding: 1px 5px; }
 .white-plan-card { width: 220px; flex-shrink: 0; scroll-snap-align: start; background: #fff; border: 1.5px solid var(--input-border); border-radius: 12px; padding: 14px; }
+
+/* TEMP DEV TEST AID — remove alongside the "Test: 1 tab" button in KpisWidget.jsx */
+.dev-test-btn {
+  display: block;
+  margin: 0 0 10px;
+  padding: 6px 10px;
+  background: #fff7e6;
+  border: 1.5px dashed #e2a33a;
+  border-radius: 8px;
+  color: #a3641a;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Bundle Activation/Renewal */
+.bundle-number-page {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 140px);
+}
+.bundle-number-continue { margin-top: auto; }
+.bundle-number-icon-label { display: inline-flex; align-items: center; gap: 8px; }
+.bundle-plan-tag {
+  background: #e7f7ee;
+  color: #1a8a4c;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+.bundle-wallet-warning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--error-red);
+  font-size: 11px;
+  margin-top: 4px;
+}
+.bundle-topup-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #6c3fa8;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+}
